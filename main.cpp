@@ -10,7 +10,7 @@ struct Entry {
     std::string type;        // "income" or "expense"
     std::string category;    // e.g. "food", "rent", "salary"
     std::string description; // free text description
-    double amount;
+    double amount = 0;
 };
 
 const std::string DATA_FILE = "budget.txt";
@@ -18,28 +18,50 @@ const std::string DATA_FILE = "budget.txt";
 // Serialize a single Entry to a string for storage
 // Called when saving entries to disk
 std::string serializeEntry(const Entry &entry) {
-    // TODO: convert entry fields to a single line string
-    // e.g. "income|salary|monthly pay|3000.00"
-    return {};
+    return entry.type + "|" + entry.category + "|" + entry.description + "|" + std::to_string(entry.amount);
 }
 
 // Deserialize a single line from the file back into an Entry
 // Called when loading entries from disk
 Entry deserializeEntry(const std::string &line) {
-    // TODO: split the line by delimiter and populate an Entry struct
-
-    return {};
+    Entry entry;
+    std::stringstream ss(line);
+    std::string token;
+    std::getline(ss, entry.type, '|');
+    std::getline(ss, entry.category, '|');
+    std::getline(ss, entry.description, '|');
+    std::getline(ss, token, '|');
+    entry.amount = std::stod(token);
+    return entry;
 }
 
 // Load all entries from the data file
 // Returns an empty vector if the file doesn't exist yet
 std::vector<Entry> loadEntries() {
-    // TODO: open DATA_FILE, read line by line, deserialize each line into an Entry
-    return {};
+    std::vector<Entry> entries;
+    std::ifstream file(DATA_FILE);
+    if (!file.is_open()) {
+        std::cout << "Could not open file " << DATA_FILE << std::endl;
+        return {};
+    }
+    std::string line;
+    while (std::getline(file, line)) {
+        entries.push_back(deserializeEntry(line));
+    }
+    return entries;
 }
 
 // Save all entries to the data file, overwriting existing content
 void saveEntries(const std::vector<Entry> &entries) {
+    std::ifstream file(DATA_FILE);
+    if (!file.is_open()) {
+        std::cout << "Could not open file " << DATA_FILE << std::endl;
+    } else {
+        for () {
+
+        }
+    }
+
     // TODO: open DATA_FILE for writing, serialize and write each entry as a line
 }
 
